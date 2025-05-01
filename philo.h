@@ -22,6 +22,7 @@ typedef struct s_philo
 	t_data *data;   // Add pointer to shared data
 	int left_fork;  // Index of left fork
 	int right_fork; // Index of right fork
+	int is_eating;
 }					t_philo;
 
 typedef struct s_data
@@ -32,6 +33,7 @@ typedef struct s_data
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
+	int				number_of_meals;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t writing; // Add mutex for console output
 	pthread_mutex_t meal_check; // Add mutex for console output
@@ -45,11 +47,13 @@ int					is_number(char *str);
 
 int					init_philos(t_data *data);
 int					init_data(t_data *data, char **av);
+int init(t_data *data, char **av);
 
 int					create_philos(t_data *data);
 int					join_philos(t_data *data);
 int					create_monitor(t_data *data);
 int					join_monitor(t_data *data);
+int create_threads(t_data *data);
 
 void				*philo_routine(void *);
 void				*monitor_routine(void *);
@@ -59,5 +63,7 @@ void				sleeping(t_philo *philo);
 void				thinking(t_philo *philo);
 
 long long get_time(void);
+void print_message(t_philo *philo,char *msg);
+int check_argemunt(char **av);
 
 #endif

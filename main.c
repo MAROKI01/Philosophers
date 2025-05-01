@@ -9,14 +9,9 @@ int main(int ac, char **av)
         printf("Two many arguments!");
         return (0);
     }
-    init_data(&data, av);
-    init_philos(&data);
-    
-    create_philos(&data);
-    create_monitor(&data);
-
-    join_philos(&data);
-    join_monitor(&data);
-
+    if (check_argemunt(av) == 1)
+        return (1);
+    init(&data, av);
+    create_threads(&data);
     return (0);
 }

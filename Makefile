@@ -3,7 +3,7 @@ NAME = philo
 CC = cc
 CFLAGS = -Werror -Wextra -Wall -pthread
 
-SRC = main.c atoi.c utils.c init.c routine.c manipulate_threads.c helpers.c
+SRC = main.c atoi.c routine_utils.c init.c routine.c manipulate_threads.c helpers.c
 
 OBJ = $(SRC:.c=.o)
 
