@@ -12,12 +12,12 @@ int	init_philos(t_data *data)
 	{
 		memset(&data->philos[i], 0, sizeof(t_philo));
 		data->philos[i].id = i + 1;
-		data->philos[i].is_eating = 1;
 		data->philos[i].data = data;
+		data->philos[i].time_last_meal = get_time();
 		data->philos[i].left_fork = i;
 		if (i == 0)
 			data->philos[i].right_fork = data->philos_number - 1;
-		else 
+		else
 			data->philos[i].right_fork = i - 1;
 		i++;
 	}
@@ -26,7 +26,7 @@ int	init_philos(t_data *data)
 
 int	init_data(t_data *data, char **av)
 {
-	int i;
+	int	i;
 
 	memset(data, 0, sizeof(t_data));
 	(data)->philos_number = ft_atoi(av[1]);
@@ -39,7 +39,7 @@ int	init_data(t_data *data, char **av)
 	(data)->start_time = get_time();
 	(data)->forks = malloc(sizeof(pthread_mutex_t) * (data)->philos_number);
 	if (!(data)->forks)
-		return(-1);
+		return (-1);
 	i = 0;
 	while (i < (data)->philos_number)
 	{
@@ -47,10 +47,14 @@ int	init_data(t_data *data, char **av)
 			return (-1);
 		i++;
 	}
+	if (pthread_mutex_init(&data->writing, NULL) != 0 ||
+		pthread_mutex_init(&data->meal_check, NULL) != 0 ||
+		pthread_mutex_init(&data->death, NULL) != 0)
+		return (-1);
 	return (0);
 }
 
-int init(t_data *data, char **av)
+int	init(t_data *data, char **av)
 {
 	if (init_data(data, av) == -1)
 		return (-1);

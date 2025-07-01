@@ -1,16 +1,28 @@
 #include "philo.h"
 
+int	is_someone_dead(t_data *data)
+{
+	pthread_mutex_lock(&data->death);
+	if (data->someone_died)
+	{
+		pthread_mutex_unlock(&data->death);
+		return (1);
+	}
+	pthread_mutex_unlock(&data->death);
+	return (0);
+}
+
 void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	if (philo->id % 2 == 0)
+		ft_usleep(10);
 	pthread_mutex_lock(&philo->data->meal_check);
 	philo->time_last_meal = get_time();
 	pthread_mutex_unlock(&philo->data->meal_check);
-	if (philo->id % 2 == 0)
-		usleep(1000);
-	while (!philo->data->someone_died && philo->is_eating)
+	while (!is_someone_dead(philo->data))
 	{
 		eating(philo);
 		sleeping(philo);
@@ -21,69 +33,72 @@ void	*philo_routine(void *arg)
 
 int	check_dead_philos(t_data *data)
 {
-	int	current_time;
-	int	i;
+	long long	current_time;
+	int			i;
 
 	i = 0;
-	while (i < data->philos_number && !data->someone_died)
+	while (i < data->philos_number)
 	{
-		current_time = get_time();
 		pthread_mutex_lock(&data->meal_check);
-		if (current_time - data->philos[i].time_last_meal > data->time_to_die)
+		current_time = get_time();
+		if (current_time - data->philos[i].time_last_meal > data->time_to_die
+			&& !data->philos[i].is_eating)
 		{
 			pthread_mutex_lock(&data->writing);
-			printf("=============== %d Philosopher %d has died===========\n",
-					current_time - data->philos[i].time_last_meal,
+			printf("=============== %lld Philosopher %d has died ===========\n",
+					current_time - data->start_time,
 					data->philos[i].id);
-			data->someone_died = 1;
 			pthread_mutex_unlock(&data->writing);
+			pthread_mutex_lock(&data->death);
+			data->someone_died = 1;
+			pthread_mutex_unlock(&data->death);
 			pthread_mutex_unlock(&data->meal_check);
-			break ;
+			return (1);
 		}
 		pthread_mutex_unlock(&data->meal_check);
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
-int	is_all_ate(t_data *data)
+int is_all_ate(t_data *data)
 {
-	int	i;
-	int	finished_eat;
+    int i;
+    int finished_eat;
 
-	finished_eat = 0;
-	i = 0;
-	while (i < data->philos_number && !data->someone_died)
-	{
-		pthread_mutex_unlock(&data->meal_check);
-		if (data->philos[i].times_eaten >= data->number_of_meals
-			&& data->philos[i].is_eating)
-		{
-			data->philos[i].is_eating = 0;
-			finished_eat++;
-		}
-		pthread_mutex_unlock(&data->meal_check);
-		i++;
-	}
-	pthread_mutex_unlock(&data->meal_check);
-	if (finished_eat == data->philos_number)
-		data->someone_died = 1;
-	pthread_mutex_unlock(&data->meal_check);
-	return (1);
+    finished_eat = 0;
+    i = 0;
+    pthread_mutex_lock(&data->meal_check);
+    while (i < data->philos_number)
+    {
+        if (data->philos[i].times_eaten >= data->number_of_meals 
+            && data->number_of_meals > 0)
+        {
+            finished_eat++;
+        }
+        i++;
+    }
+    pthread_mutex_unlock(&data->meal_check);
+    if (finished_eat == data->philos_number)
+    {
+        pthread_mutex_lock(&data->death);
+        data->someone_died = 1;
+        pthread_mutex_unlock(&data->death);
+        pthread_mutex_lock(&data->writing);
+        printf("All philosophers have eaten %d times\n", data->number_of_meals);
+        pthread_mutex_unlock(&data->writing);
+        return (1);
+    }
+    return (0);
 }
-void	*monitor_routine(void *arg)
-{
-	t_data	*data;
-	int		finished_eat;
 
-	data = (t_data *)arg;
-	finished_eat = 0;
-	usleep(100000);
-	printf("=============== Monitor start ============\n");
+void	monitor_routine(t_data *data)
+{
 	while (!data->someone_died)
 	{
-		check_dead_philos(data);
-        is_all_ate(data);
+		if (is_all_ate(data) == 1)
+			break ;
+		if (check_dead_philos(data) == 1)
+			break ;
 	}
-	return (NULL);
 }
