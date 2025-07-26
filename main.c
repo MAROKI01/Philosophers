@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ntahadou <ntahadou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/26 14:51:57 by ntahadou          #+#    #+#             */
+/*   Updated: 2025/07/26 14:57:36 by ntahadou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-int	clean_up(t_data *data)
+static int	clean_up(t_data *data)
 {
 	int	i;
 
@@ -12,9 +24,9 @@ int	clean_up(t_data *data)
 			return (-1);
 		i++;
 	}
-	if (pthread_mutex_destroy(&data->writing) != 0 ||
-		pthread_mutex_destroy(&data->meal_check) != 0 ||
-		pthread_mutex_destroy(&data->death) != 0)
+	if (pthread_mutex_destroy(&data->writing) != 0
+		|| pthread_mutex_destroy(&data->meal_check) != 0
+		|| pthread_mutex_destroy(&data->death) != 0)
 		return (-1);
 	if (data)
 	{
@@ -28,7 +40,7 @@ int	clean_up(t_data *data)
 
 int	main(int ac, char **av)
 {
-	t_data data;
+	t_data	data;
 
 	if (ac < 5)
 	{

@@ -6,7 +6,7 @@
 /*   By: ntahadou <ntahadou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 18:46:47 by ntahadou          #+#    #+#             */
-/*   Updated: 2025/04/21 16:58:23 by ntahadou         ###   ########.fr       */
+/*   Updated: 2025/07/26 15:25:57 by ntahadou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@ static int	ft_isspace(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\v'
 		|| c == '\f');
+}
+
+int	ft_isdigit(char c)
+{
+	return (c >= '0' && c <= '9');
 }
 
 long	ft_atoi(const char *str)

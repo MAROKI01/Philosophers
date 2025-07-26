@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   manipulate_threads.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ntahadou <ntahadou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/26 14:52:02 by ntahadou          #+#    #+#             */
+/*   Updated: 2025/07/26 14:52:06 by ntahadou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	create_philos(t_data *data)
@@ -28,20 +40,6 @@ int	join_philos(t_data *data)
 	}
 	return (0);
 }
-
-// int	create_monitor(t_data *data)
-// {
-// 	if (pthread_create(&(data)->monitor, NULL, &monitor_routine, data) != 0)
-// 		return (-1);
-// 	return (0);
-// }
-
-// int	join_monitor(t_data *data)
-// {
-// 	if (pthread_join((data)->monitor, NULL) != 0)
-// 		return (-1);
-// 	return (0);
-// }
 
 int	create_threads(t_data *data)
 {

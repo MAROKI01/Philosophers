@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ntahadou <ntahadou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/26 14:51:52 by ntahadou          #+#    #+#             */
+/*   Updated: 2025/07/26 14:57:15 by ntahadou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-int	init_philos(t_data *data)
+static int	init_philos(t_data *data)
 {
 	int	i;
 
@@ -24,7 +36,7 @@ int	init_philos(t_data *data)
 	return (0);
 }
 
-int	init_data(t_data *data, char **av)
+static int	init_data(t_data *data, char **av)
 {
 	int	i;
 
@@ -40,16 +52,15 @@ int	init_data(t_data *data, char **av)
 	(data)->forks = malloc(sizeof(pthread_mutex_t) * (data)->philos_number);
 	if (!(data)->forks)
 		return (-1);
-	i = 0;
-	while (i < (data)->philos_number)
+	i = -1;
+	while (++i < (data)->philos_number)
 	{
 		if (pthread_mutex_init(&(data)->forks[i], NULL) != 0)
 			return (-1);
-		i++;
 	}
-	if (pthread_mutex_init(&data->writing, NULL) != 0 ||
-		pthread_mutex_init(&data->meal_check, NULL) != 0 ||
-		pthread_mutex_init(&data->death, NULL) != 0)
+	if (pthread_mutex_init(&data->writing, NULL) != 0
+		|| pthread_mutex_init(&data->meal_check, NULL) != 0
+		|| pthread_mutex_init(&data->death, NULL) != 0)
 		return (-1);
 	return (0);
 }
