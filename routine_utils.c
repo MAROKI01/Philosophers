@@ -6,7 +6,7 @@
 /*   By: ntahadou <ntahadou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:52:14 by ntahadou          #+#    #+#             */
-/*   Updated: 2025/07/28 12:42:00 by ntahadou         ###   ########.fr       */
+/*   Updated: 2025/07/28 13:01:49 by ntahadou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,27 @@ void	thinking(t_philo *philo)
 	print_message(philo, "is thinking");
 }
 
+int	is_starving(t_philo *philo)
+{
+	long long	now;
+	long long	hunger;
+
+	now = get_time();
+	hunger = now - philo->time_last_meal;
+	return (hunger >= philo->data->time_to_die * 0.9);
+}
+
 void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	if (philo->id % 2 == 0)
+		ft_usleep(10);
 	while (!is_someone_dead(philo->data))
 	{
 		thinking(philo);
-		if (is_most_starving(philo))
+		if (is_most_starving(philo) || is_starving(philo))
 			eating(philo);
 		sleeping(philo);
 	}
