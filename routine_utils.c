@@ -6,7 +6,7 @@
 /*   By: ntahadou <ntahadou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:52:14 by ntahadou          #+#    #+#             */
-/*   Updated: 2025/07/28 13:01:49 by ntahadou         ###   ########.fr       */
+/*   Updated: 2025/07/28 18:57:52 by ntahadou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	eating(t_philo *philo)
 	{
 		pthread_mutex_lock(&(philo->data->forks[philo->left_fork]));
 		print_message(philo, "has taken a fork");
-		ft_usleep(philo->data->time_to_die);
+		ft_usleep( philo->data->time_to_die);
 		pthread_mutex_unlock(&(philo->data->forks[philo->left_fork]));
 		return ;
 	}
@@ -44,7 +44,7 @@ void	eating(t_philo *philo)
 	philo->times_eaten++;
 	philo->time_last_meal = get_time();
 	pthread_mutex_unlock(&philo->data->meal_check);
-	ft_usleep(philo->data->time_to_eat);
+	ft_usleep( philo->data->time_to_eat);
 	pthread_mutex_unlock(&(philo->data->forks[philo->right_fork]));
 	pthread_mutex_unlock(&(philo->data->forks[philo->left_fork]));
 }
@@ -52,22 +52,12 @@ void	eating(t_philo *philo)
 void	sleeping(t_philo *philo)
 {
 	print_message(philo, "is sleeping");
-	ft_usleep(philo->data->time_to_sleep);
+	ft_usleep( philo->data->time_to_sleep);
 }
 
 void	thinking(t_philo *philo)
 {
 	print_message(philo, "is thinking");
-}
-
-int	is_starving(t_philo *philo)
-{
-	long long	now;
-	long long	hunger;
-
-	now = get_time();
-	hunger = now - philo->time_last_meal;
-	return (hunger >= philo->data->time_to_die * 0.9);
 }
 
 void	*philo_routine(void *arg)

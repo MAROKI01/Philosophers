@@ -6,7 +6,7 @@
 /*   By: ntahadou <ntahadou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:52:21 by ntahadou          #+#    #+#             */
-/*   Updated: 2025/07/28 12:43:47 by ntahadou         ###   ########.fr       */
+/*   Updated: 2025/07/28 13:06:55 by ntahadou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ int	check_dead_philos(t_data *data)
 		{
 			pthread_mutex_lock(&data->writing);
 			printf("%lld %d has died\n",
-					current_time - data->start_time,
-					data->philos[i].id);
+				current_time - data->start_time,
+				data->philos[i].id);
 			pthread_mutex_unlock(&data->writing);
 			pthread_mutex_lock(&data->death);
 			data->someone_died = 1;
@@ -102,7 +102,6 @@ int	is_all_ate(t_data *data)
 		data->someone_died = 1;
 		pthread_mutex_unlock(&data->death);
 		pthread_mutex_lock(&data->writing);
-		// printf("All philosophers have eaten %d times\n", data->number_of_meals);
 		pthread_mutex_unlock(&data->writing);
 		return (1);
 	}

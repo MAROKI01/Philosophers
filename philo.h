@@ -6,7 +6,7 @@
 /*   By: ntahadou <ntahadou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:52:08 by ntahadou          #+#    #+#             */
-/*   Updated: 2025/07/28 12:42:37 by ntahadou         ###   ########.fr       */
+/*   Updated: 2025/07/28 18:34:58 by ntahadou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,9 @@ int						init(t_data *data, char **av);
 int						create_philos(t_data *data);
 int						join_philos(t_data *data);
 int						is_most_starving(t_philo *philo);
-
+int						is_starving(t_philo *philo);
 int						create_threads(t_data *data);
+int						is_someone_dead(t_data *data);
 
 void					*philo_routine(void *arg);
 void					monitor_routine(t_data *data);
