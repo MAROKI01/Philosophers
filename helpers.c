@@ -6,7 +6,7 @@
 /*   By: ntahadou <ntahadou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:51:37 by ntahadou          #+#    #+#             */
-/*   Updated: 2025/07/26 15:26:30 by ntahadou         ###   ########.fr       */
+/*   Updated: 2025/07/26 17:25:45 by ntahadou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ long long	get_time(void)
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+	return ((time.tv_sec * 1000L) + (time.tv_usec / 1000));
 }
 
 void	print_message(t_philo *philo, char *msg)

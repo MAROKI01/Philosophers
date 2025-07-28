@@ -6,7 +6,7 @@
 /*   By: ntahadou <ntahadou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 14:52:21 by ntahadou          #+#    #+#             */
-/*   Updated: 2025/07/26 15:24:17 by ntahadou         ###   ########.fr       */
+/*   Updated: 2025/07/28 12:43:47 by ntahadou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,21 +24,33 @@ int	is_someone_dead(t_data *data)
 	return (0);
 }
 
-void	*philo_routine(void *arg)
+int	is_most_starving(t_philo *philo)
 {
-	t_philo	*philo;
+	long long	now;
+	long long	my_hunger;
+	int			i;
+	int			most_starving;
+	long long	other_hunger;
 
-	philo = (t_philo *)arg;
-	if (philo->id % 2 != 0
-		&& philo->data->philos_number == 3)
-		ft_usleep(1);
-	while (!is_someone_dead(philo->data))
+	now = get_time();
+	my_hunger = now - philo->time_last_meal;
+	most_starving = 1;
+	pthread_mutex_lock(&philo->data->meal_check);
+	i = -1;
+	while (++i < philo->data->philos_number)
 	{
-		eating(philo);
-		sleeping(philo);
-		thinking(philo);
+		if (i != philo->id - 1)
+		{
+			other_hunger = now - philo->data->philos[i].time_last_meal;
+			if (other_hunger > my_hunger)
+			{
+				most_starving = 0;
+				break ;
+			}
+		}
 	}
-	return (NULL);
+	pthread_mutex_unlock(&philo->data->meal_check);
+	return (most_starving);
 }
 
 int	check_dead_philos(t_data *data)
@@ -51,13 +63,12 @@ int	check_dead_philos(t_data *data)
 	{
 		pthread_mutex_lock(&data->meal_check);
 		current_time = get_time();
-		if (current_time - data->philos[i].time_last_meal > data->time_to_die
-			&& !data->philos[i].is_eating)
+		if (current_time - data->philos[i].time_last_meal > data->time_to_die)
 		{
 			pthread_mutex_lock(&data->writing);
 			printf("%lld %d has died\n",
-				current_time - data->start_time,
-				data->philos[i].id);
+					current_time - data->start_time,
+					data->philos[i].id);
 			pthread_mutex_unlock(&data->writing);
 			pthread_mutex_lock(&data->death);
 			data->someone_died = 1;
@@ -91,7 +102,7 @@ int	is_all_ate(t_data *data)
 		data->someone_died = 1;
 		pthread_mutex_unlock(&data->death);
 		pthread_mutex_lock(&data->writing);
-		printf("All philosophers have eaten %d times\n", data->number_of_meals);
+		// printf("All philosophers have eaten %d times\n", data->number_of_meals);
 		pthread_mutex_unlock(&data->writing);
 		return (1);
 	}
